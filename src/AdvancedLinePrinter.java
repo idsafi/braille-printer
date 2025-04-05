@@ -19,13 +19,13 @@ public class AdvancedLinePrinter {
         (provided that you do not add further public methods or variables to {@code BrailleLineBuffer}).
     */
     // TODO: uncomment declaration
-    // private final LineBuffer lineBuffer;  // buffer that holds output (bitmaps of printed braille characters)
+    private final LineBuffer lineBuffer;  // buffer that holds output (bitmaps of printed braille characters)
 
     // TODO: uncomment declaration
-    //private final Font font;        // font used to render output
+    private final Font font;        // font used to render output
 
     // TODO: your variables go here
-
+    private int spacing;
 
     /**
      * Constructs an AdvancedLinePrinter for processing printable Braille text.
@@ -39,6 +39,9 @@ public class AdvancedLinePrinter {
      */
     public AdvancedLinePrinter(Font font, int spacing, LineBuffer lineBuffer) {
         // TODO: implementation
+        this.font = font;
+        this.spacing = spacing;
+        this.lineBuffer = lineBuffer;
     }
 
     /**
@@ -46,6 +49,7 @@ public class AdvancedLinePrinter {
      */
     public void clearLine() {
         // TODO: implementation
+        lineBuffer.clearBuffer();
     }
 
     /**
@@ -59,6 +63,7 @@ public class AdvancedLinePrinter {
      */
     public void printCharacter(char character) {
         // TODO: implementation
+        lineBuffer.push(font.getBitmap(character));
     }
 
     /**
@@ -73,6 +78,7 @@ public class AdvancedLinePrinter {
      */
     public void printBackSpace() {
         // TODO: implementation
+        lineBuffer.pop();
     }
 
     /**
@@ -82,6 +88,9 @@ public class AdvancedLinePrinter {
      */
     public void printString(String string) {
         // TODO: implementation
+        for (char character : string.toCharArray()){
+            printCharacter(character);
+        }
     }
 
     /**
@@ -90,6 +99,13 @@ public class AdvancedLinePrinter {
      */
     public void flush() {
         // TODO: implementation
+        String[] scanLines = lineBuffer.renderScanlines(spacing);
+        if(scanLines != null){
+            for (String line : scanLines){
+                System.out.println(line);
+            }
+        }
+        lineBuffer.clearBuffer();
     }
 
 
@@ -105,6 +121,7 @@ public class AdvancedLinePrinter {
      */
     public void insertCharacter(int position, char character) {
         // TODO: implementation
+        lineBuffer.insert(position, font.getBitmap(character));
     }
 
     /**
@@ -116,6 +133,7 @@ public class AdvancedLinePrinter {
      */
     public void deleteCharacter(int position) {
         // TODO: implementation
+        lineBuffer.delete(position);
     }
 
     /**
@@ -126,6 +144,7 @@ public class AdvancedLinePrinter {
      */
     public void setSpacing(int spacing) {
         // TODO: implementation
+        this.spacing = spacing;
     }
 
     /**
@@ -136,7 +155,7 @@ public class AdvancedLinePrinter {
      */
     public int getSpacing() {
         // TODO: implementation
-        return 0;
+        return spacing;
     }
 }
 
