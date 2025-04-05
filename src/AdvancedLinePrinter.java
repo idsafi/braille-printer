@@ -106,6 +106,7 @@ public class AdvancedLinePrinter {
             }
         }
         lineBuffer.clearBuffer();
+
     }
 
 

@@ -2,7 +2,7 @@ package src;
 
 public class Application {
     public static void main(String[] args) {
-        /*LinePrinter lp = new LinePrinter(
+        LinePrinter lp1 = new LinePrinter(
                 new BrailleFont(3,
                                 2,
                                 'o',
@@ -12,9 +12,8 @@ public class Application {
                 4
         );
 
-        lp.printString("Hello World");
-        lp.flush();
-         */
+        lp1.printString("Hello World");
+        lp1.flush();
 
 
         LineBuffer lineBuffer = new BrailleLineBuffer(3, 1.5, 0.3);

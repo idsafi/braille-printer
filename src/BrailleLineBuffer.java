@@ -174,10 +174,9 @@ public class BrailleLineBuffer implements LineBuffer {
     @Override
     public boolean insert(int cursorPosition, char[][] bitmap) {
         // TODO: implementation
-        int newCursorPosition = cursorPosition - 1;
-        if(newCursorPosition > 0 || newCursorPosition < buffer.length){
-            System.arraycopy(buffer, newCursorPosition, buffer, newCursorPosition + 1, count() - newCursorPosition);
-            buffer[newCursorPosition] = bitmap;
+        if(cursorPosition > 0 || cursorPosition < buffer.length){
+            System.arraycopy(buffer, cursorPosition, buffer, cursorPosition + 1, count() - cursorPosition);
+            buffer[cursorPosition] = bitmap;
             count++;
             return true;
         }
@@ -199,10 +198,9 @@ public class BrailleLineBuffer implements LineBuffer {
     @Override
     public boolean delete(int cursorPosition) {
         // TODO: implementation
-        int newCursorPosition = cursorPosition - 1;
-        if(newCursorPosition > 0 || newCursorPosition < buffer.length){
-            buffer[newCursorPosition] = null;
-            System.arraycopy(buffer, newCursorPosition + 1, buffer, newCursorPosition, count() - newCursorPosition);
+        if(cursorPosition > 0 || cursorPosition < buffer.length){
+            buffer[cursorPosition] = null;
+            System.arraycopy(buffer, cursorPosition + 1, buffer, cursorPosition, count() - cursorPosition);
             count--;
             reduceBuffer();
             return true;
@@ -219,6 +217,7 @@ public class BrailleLineBuffer implements LineBuffer {
     public void clearBuffer() {
         // TODO: implementation
         buffer = new char[initialSize][][];
+        count = 0;
     }
 
     /**
@@ -237,17 +236,35 @@ public class BrailleLineBuffer implements LineBuffer {
         if(count <= 0){
             return null;
         }
-        int width = (buffer[0].length - 1) * (count + spacing) - spacing;
-        String[] renderLines = new String[width];
-        for (int i = 0; i < buffer.length; i++) {
+        //int width = (buffer[0].length - 1) * (count + spacing) - spacing;
+        String[] renderLines = new String[buffer.length];
+        String line = "";
+
+        /*for (int i = 0; i < buffer.length; i++) {
             for (int j = 0; j < buffer[i].length; j++) {
                 for (int k = 0; k < buffer[j].length; k++) {
-                    renderLines[i] += Character.toString(buffer[i][j][k]);
+                    line += buffer[i][j][k];
                 }
             }
             for (int j = 0; j < spacing; j++) {
-                renderLines[i] += " ";
+                line += " ";
             }
+            renderLines[i] = line;
+            line = "";
+        }
+         */
+        int i = 0;
+        while(i < buffer.length){
+            if(buffer[i] != null){
+                for (int j = 0; j < buffer[i].length; j++) {
+                    for (int k = 0; k < buffer[i].length - 1; k++) {
+                        line += buffer[i][j][k];
+                    }
+                }
+                renderLines[i] = line;
+                line = "";
+            }
+            i++;
         }
         return renderLines;
     }
