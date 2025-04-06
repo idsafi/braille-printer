@@ -1,5 +1,7 @@
 package src;
 
+import java.util.Arrays;
+
 /**
  * The AdvancedLinePrinter class is designed to render Braille text representations to standard output
  * using an auto-scaling memory efficient line buffer and a customizable font.
@@ -93,6 +95,16 @@ public class AdvancedLinePrinter {
         }
     }
 
+    /* May be deleted
+    private char[][] StringTo2DCharArray(String[] string){
+        char[][] pufferTemp = new char[string.length][];
+        for (int i = 0; i < string.length; i++) {
+            pufferTemp[i] = string[i].toCharArray();
+        }
+        return pufferTemp;
+    }
+     */
+
     /**
      * Method flushes the content of the line buffer by printing each row to the standard output (console),
      * and then clearing the buffer.
@@ -100,10 +112,8 @@ public class AdvancedLinePrinter {
     public void flush() {
         // TODO: implementation
         String[] scanLines = lineBuffer.renderScanlines(spacing);
-        if(scanLines != null){
-            for (String line : scanLines){
-                System.out.println(line);
-            }
+        for (String line : scanLines){
+            System.out.println(line);
         }
         lineBuffer.clearBuffer();
 

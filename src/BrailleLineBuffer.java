@@ -233,40 +233,22 @@ public class BrailleLineBuffer implements LineBuffer {
     @Override
     public String[] renderScanlines(int spacing) {
         // TODO: implementation
-        if(count <= 0){
+        if(count() < 1){
             return null;
         }
-        //int width = (buffer[0].length - 1) * (count + spacing) - spacing;
-        String[] renderLines = new String[buffer.length];
-        String line = "";
-
-        /*for (int i = 0; i < buffer.length; i++) {
-            for (int j = 0; j < buffer[i].length; j++) {
-                for (int k = 0; k < buffer[j].length; k++) {
-                    line += buffer[i][j][k];
+        String[] result = new String[buffer[0].length];
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < buffer[0].length; i++) {
+            for (int j = 0; j < count; j++) {
+                builder.append(buffer[j][i]);
+                if(j < count - 1){
+                    builder.append(" ".repeat(spacing));
                 }
             }
-            for (int j = 0; j < spacing; j++) {
-                line += " ";
-            }
-            renderLines[i] = line;
-            line = "";
+            result[i] = builder.toString();
+            builder.setLength(0);
         }
-         */
-        int i = 0;
-        while(i < buffer.length){
-            if(buffer[i] != null){
-                for (int j = 0; j < buffer[i].length; j++) {
-                    for (int k = 0; k < buffer[i].length - 1; k++) {
-                        line += buffer[i][j][k];
-                    }
-                }
-                renderLines[i] = line;
-                line = "";
-            }
-            i++;
-        }
-        return renderLines;
+        return result;
     }
 
     /**
