@@ -233,6 +233,7 @@ public class BrailleLineBuffer implements LineBuffer {
     @Override
     public String[] renderScanlines(int spacing) {
         // TODO: implementation
+        //check if buffer is empty
         if(count() < 1){
             return null;
         }
