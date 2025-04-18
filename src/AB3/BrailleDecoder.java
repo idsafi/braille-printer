@@ -1,6 +1,8 @@
 package src.AB3;
+import src.AB1.Interfaces.Encoder;
 import src.AB3.Interfaces.Decoder;
 import src.AB3.Provided.BrailleEncoder;
+import src.AB3.Provided.TreeNode;
 
 /**
  * The class implements a decoders, which decodes Braille symbols (bitmaps) into ASCII characters.
@@ -23,6 +25,11 @@ public class BrailleDecoder implements Decoder {
      */
     public BrailleDecoder(BrailleEncoder encoder){
         // TODO: implementation
+        this.decoderTree = new BrailleSymbolTree(encoder);
+        decoderTree.addNode(SPACE_SYMBOL);
+        for (char c = 'a'; c <= 'z'; c++) {
+            decoderTree.addNode(c);
+        }
     }
 
     /**
@@ -43,7 +50,30 @@ public class BrailleDecoder implements Decoder {
      */
     public char decodeBitmap(char[][] bitMap, char dotSymbol){
         // TODO: implementation
-        return 0;
+        if(bitMap == null || bitMap.length < BITMAP_HEIGHT || bitMap[0].length < BITMAP_WIDTH){
+            return '0';
+        }
+
+        int[][] bitPositions = {
+                {0, 3},
+                {1, 4},
+                {2, 5}
+        };
+
+        int result = 0;
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 2; col++) {
+                if (bitMap[row][col] == 'o') {
+                    result = result | (1 << bitPositions[row][col]);
+                }
+            }
+        }
+
+        byte encoded = (byte)result;
+        TreeNode ascii = decoderTree.getNode(encoded);
+        //char symbol = ascii.getSymbol();
+        return ascii != null ? ascii.getSymbol() : ' ';
     }
 }
 

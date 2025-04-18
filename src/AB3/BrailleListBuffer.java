@@ -25,6 +25,7 @@ public class BrailleListBuffer implements ListBuffer {
      */
     BrailleListBuffer(List list) {  // Hint: pass your BrailleLinkedList to this constructor
         // TODO: implementation
+        this.list = list;
     }
 
     /**
@@ -35,7 +36,7 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public int size() {
         // TODO: implementation
-        return 0;
+        return list.size();
     }
 
     /**
@@ -48,6 +49,7 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public void push(char[][] bitmap) {
         // TODO: implementation
+        list.addLast(new ListNode(bitmap));
     }
 
     /**
@@ -60,6 +62,9 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public char[][] pop() {
         // TODO: implementation
+        if(list.size() > 0){
+            return list.removeLast().getBitmap();
+        }
         return null;
     }
 
@@ -74,6 +79,9 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public void insert(int position, char[][] bitmap) {
         // TODO: implementation
+        if(bitmap != null){
+            list.insert(new ListNode(bitmap), position);
+        }
     }
 
     /**
@@ -88,6 +96,9 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public char[][] delete(int position) {
         // TODO: implementation
+        if(list.size() > 0){
+            return list.remove(position).getBitmap();
+        }
         return null;
     }
 
@@ -100,6 +111,7 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public void clearBuffer() {
         // TODO: implementation
+        list.clear();
     }
 
     /**
@@ -115,6 +127,23 @@ public class BrailleListBuffer implements ListBuffer {
     @Override
     public String[] renderScanlines(int spacing) {
         // TODO: implementation
+        if(list.size() > 0){
+            int size = list.getFirst().getBitmap().length;
+            String[] renderScanLines = new String[size];
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < list.size(); j++) {
+                    char[][] line = list.get(j).getBitmap();
+                    builder.append(line[i]);
+                    if(j != list.size() - 1){
+                        builder.append(" ".repeat(spacing));
+                    }
+                }
+                renderScanLines[i] = builder.toString();
+                builder.setLength(0);
+            }
+            return renderScanLines;
+        }
         return null;
     }
 }

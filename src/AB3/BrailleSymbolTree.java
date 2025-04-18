@@ -23,6 +23,8 @@ public class BrailleSymbolTree implements Tree {
      */
     public BrailleSymbolTree(BrailleEncoder encoder) {
         // TODO: implementation
+        root = new TreeNode();
+        this.encoder = encoder;
     }
 
     /**
@@ -42,6 +44,41 @@ public class BrailleSymbolTree implements Tree {
     @Override
     public void addNode(char asciiCharacter) {
         // TODO: implementation
+        byte brailleToBinary;
+        if(asciiCharacter == ' '){
+            brailleToBinary = 0b000000;
+        } else {
+            brailleToBinary = encoder.toBinary(asciiCharacter);
+        }
+        add(brailleToBinary, root, asciiCharacter, 0);
+    }
+
+    //helper method for initializing the path and adding the ascii to the path end rekursive
+    private void add(byte encoded, TreeNode node, char ascii, int index){
+        if(index > 6){
+            TreeNode setLeaf = new TreeNode();
+            setLeaf.setSymbol(ascii);
+            node.setLeft(setLeaf);
+            return;
+        }
+        int bit = (encoded & (1 << index)) != 0 ? 1 : 0;
+        if(bit == 0){
+            if(node.getLeft() != null){
+                add(encoded, node.getLeft(), ascii, ++index);
+            } else {
+                node.setLeft(new TreeNode());
+                add(encoded, node.getLeft(), ascii, ++index);
+            }
+        } else {
+            if(node.getRight() != null){
+                add(encoded, node.getRight(), ascii, ++index);
+            } else {
+                TreeNode nodeRight = new TreeNode();
+                nodeRight.setSymbol('1');
+                node.setRight(nodeRight);
+                add(encoded, node.getRight(), ascii, ++index);
+            }
+        }
     }
 
 
@@ -60,6 +97,26 @@ public class BrailleSymbolTree implements Tree {
     @Override
     public TreeNode getNode(byte encoded){
         // TODO: implementation
+        return search(encoded, root, 0);
+    }
+
+    private TreeNode search(byte encoded, TreeNode node, int index){
+        if(index > 6){
+            return node.getLeft();
+        }
+
+        if(node != null){
+
+            int bit = (encoded & (1 << index)) != 0 ? 1 : 0;
+
+            if(bit == 0){
+                return search(encoded, node.getLeft(), ++index);
+            } else {
+                return search(encoded, node.getRight(), ++index);
+            }
+
+        }
+
         return null;
     }
 
